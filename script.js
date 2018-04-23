@@ -101,6 +101,16 @@ var connectControllers = function () {
 
             var pod = pods.items[j];
 
+            var image_info = pod.spec.containers[0].image.split(":");
+
+            if (image_info[1] == "v1") { serviceColor='rgb(0,255,0)'; }
+            if (image_info[1] == "v2") { serviceColor='rgb(0,0,255)'; }
+            if (image_info[1] == "v3") { serviceColor='rgb(255,0,0)'; }
+            if (image_info[1] == "v4") { serviceColor='rgb(255,255,0)'; }
+            if (image_info[1] == "v5") { serviceColor='rgb(0,255,255)'; }
+            if (image_info[1] == "v6") { serviceColor='rgb(127,127,255)'; }
+
+
             if (matchesLabelQuery(pod.metadata.labels, service.spec.selector)) {
                 jsPlumb.connect(
                     {
@@ -256,6 +266,15 @@ var loadData = function () {
             val.type = 'replicationController';
         });
     });
+
+    /* TODO:??
+    var req2 = $.getJSON("/api/v1/namespaces/default/replicasets", function (data) {
+        controllers = data;
+        $.each(data.items, function (key, val) {
+            val.type = 'replicaSet';
+        });
+    });
+    */
 
 
     var req3 = $.getJSON("/api/v1/namespaces/default/services", function (data) {
