@@ -14,6 +14,15 @@
  limitations under the License.
  */
 
+var controllerColor='rgb(51,105,232)';
+//var serviceColor='rgb(0,153,57)';
+var serviceColor='rgb(255,153,57)';
+
+var colors = [
+    'rgb(213,15,37)',
+    'rgba(238,178,17,1.0)'
+];
+
 var truncate = function (str, width) {
     if (str && str.length > width) {
         return str.slice(0, width) + "...";
@@ -72,9 +81,9 @@ var connectControllers = function () {
                     source: controller.metadata.uid,
                     target: pod.metadata.uid,
                     anchors: ["Bottom", "Bottom"],
-                    paintStyle: {lineWidth: 5, strokeStyle: 'rgb(51,105,232)'},
+                    paintStyle: {lineWidth: 5, strokeStyle: controllerColor},
                     joinStyle: "round",
-                    endpointStyle: {fillStyle: 'rgb(51,105,232)', radius: 7},
+                    endpointStyle: {fillStyle: controllerColor, radius: 7},
                     connector: ["Flowchart", {cornerRadius: 5}]
                 });
             }
@@ -98,8 +107,8 @@ var connectControllers = function () {
                         source: service.metadata.uid,
                         target: pod.metadata.uid,
                         anchors: ["Bottom", "Top"],
-                        paintStyle: {lineWidth: 5, strokeStyle: 'rgb(0,153,57)'},
-                        endpointStyle: {fillStyle: 'rgb(0,153,57)', radius: 7},
+                        paintStyle: {lineWidth: 5, strokeStyle: serviceColor},
+                        endpointStyle: {fillStyle: serviceColor, radius: 7},
                         joinStyle: "round",
                         connector: ["Flowchart", {cornerRadius: 5}]
                     });
@@ -107,11 +116,6 @@ var connectControllers = function () {
         }
     }
 };
-
-var colors = [
-    'rgb(213,15,37)',
-    'rgba(238,178,17,1.0)'
-];
 
 var connectUses = function () {
     var colorIx = 0;
