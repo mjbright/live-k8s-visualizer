@@ -7,16 +7,16 @@ PORT=8002
 
 #kubectl proxy --www=/Users/mjb/src/git/brendandburns.gcp-live-k8s-visualizer --www-prefix=/my-mountpoint/ --api-prefix=/api/
 
-SRC_DIR=~/src/git/mjbright.live-k8s-visualizer
+# SRC_DIR=~/src/git/GIT_mjbright/live-k8s-visualizer
+SRC_DIR=.
 
-if [ "$1" = "." ];then
-    #SRC_DIR=$PWD
-    SRC_DIR=.
-fi
 
-if [ "$1" = "-l" ];then
-    SRC_DIR=~/src/git/larrycai.gcp-live-k8s-visualizer
-fi
+while [ ! -z "$1" ]; do
+    case $1 in
+        -l) SRC_DIR=~/src/git/larrycai.gcp-live-k8s-visualizer;;
+        *)  SRC_DIR=$1;;
+    esac
+done
 
 set -x
 kubectl proxy --www=$SRC_DIR --www-prefix=/ --api-prefix=/api/ --port $PORT
