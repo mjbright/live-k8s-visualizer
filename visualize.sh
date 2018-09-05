@@ -18,6 +18,9 @@ OPTS=""
 
 while [ ! -z "$1" ];do
     case $1 in
+        -p)   # Specify other port for experiments:
+              shift; PORT=$1;;
+
         -r)   # Access remotely:
               IP=$(ip a | awk '!/127.0.0.1/ && / inet / { FS="/"; $0=$2; print $1; exit(0); }')
               if [ ! -z "$2" ]; then
