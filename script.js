@@ -49,6 +49,7 @@ var insertByName = function (index, value) {
     }
     list.push(value);
     value.metadata.name=value.type + ": " + value.metadata.name;
+    //value.html='<b>' + value.type + "</b>: <br/><i>" + value.metadata.name + '</i>';
 };
 
 var groupByName = function () {
@@ -220,7 +221,12 @@ var renderGroups = function () {
                 controllersCount += 1;
             }
             span = $('<span />');
+            //span = $('<span> text </span>');
+            //span = $('<div> text </div>');
             span.text(truncate(value.metadata.name, 17));
+            //span.html(value.html);
+            //span.text('<b>' + value.metadata.name + '</b>');
+            //span.innerHTML='<b>' + value.metadata.name + '</b>';
             eltDiv.append(span)
             div.append(eltDiv);
             x += 180;
