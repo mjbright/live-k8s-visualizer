@@ -5,7 +5,7 @@ die() {
     exit 1
 }
 
-cd $(dirname $0)
+cd $(dirname $0)/..
 
 OPTS=""
 
@@ -14,8 +14,12 @@ HOST_IP=127.0.0.1
 
 TTYD_PORT=9001
 
+NAMESPACE="default"
+
+
 echo; echo "Checking node type:"
 TYPE=$(kubectl get nodes | awk '$3 == "master" { print $1; exit 0; }')
+KUBENODE_NAME=$TYPE
 
 case "$TYPE" in
     docker-for-desktop)
@@ -32,9 +36,9 @@ case "$TYPE" in
         ;;
 esac
 
-VISUALIZER_PORT=8002
+VISUALIZER_PORT=8003
 
-#SERVICE_PORT="PORT_UNSET"
+SERVICE_PORT="PORT_UNSET"
 SERVICE_PORT="1234"
 REMOTE=0
 
@@ -78,7 +82,7 @@ _SERVICE_PORT=$SERVICE_PORT
 
 TTYD_URL=127.0.0.1:$TTYD_PORT
 SERVICE_URL=http://${KUBENODE_IP}:${SERVICE_PORT}
-VISUALIZER_URL=http://${HOST_IP}:$VISUALIZER_PORT
+VISUALIZER_URL=http://${HOST_IP}:$VISUALIZER_PORT/static/index.html
 
 echo
 echo "Creating demo.html:"
@@ -88,7 +92,13 @@ echo "    - Using VISUALIZER_URL=$VISUALIZER_URL"
 
 #sed -e "s/SERVICE_URL/$SERVICE_URL/g" -e "s/VISUALIZER_URL/$VISUALIZER_URL/g" demo.html.template > demo.html
 
-sed -e "s-TTYD_URL-$TTYD_URL-g" -e "s-SERVICE_URL-$SERVICE_URL-g" -e "s-VISUALIZER_URL-$VISUALIZER_URL-g" demo.html.template > demo.html
+sed -e "s-TTYD_URL-$TTYD_URL-g" \
+    -e "s-SERVICE_URL-$SERVICE_URL-g" \
+    -e "s-VISUALIZER_URL-$VISUALIZER_URL-g" \
+    -e "s/KUBENODE_NAME/$KUBENODE_NAME/g" \
+    -e "s-KUBENODE_IP-$KUBENODE_IP-g" \
+    -e "s-NAMESPACE-$NAMESPACE-g" \
+    demo.html.template > demo.html
 
 
 ## TODO: give local and remote SERVICE_URLs if different:
