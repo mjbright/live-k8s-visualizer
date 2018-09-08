@@ -42,7 +42,8 @@ while [ ! -z "$1" ];do
     shift
 done
 
+#kubectl proxy $OPTS  --www=$SRC_DIR --www-prefix=/ --api-prefix=/api/ --port $PORT
 set -x
-kubectl proxy $OPTS  --www=$SRC_DIR --www-prefix=/ --api-prefix=/api/ --port $PORT
+kubectl proxy $OPTS  --www=$SRC_DIR --www-prefix=/static/ --api-prefix=/api/ --port $PORT
 set +x
 
