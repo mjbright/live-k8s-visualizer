@@ -48,6 +48,7 @@ var insertByName = function (index, value) {
         groups[value.metadata.labels.run] = list;
     }
     list.push(value);
+    value.metadata.name=value.type + ": " + value.metadata.name;
 };
 
 var groupByName = function () {
