@@ -7,7 +7,8 @@ PORT=8002
 
 #kubectl proxy --www=/Users/mjb/src/git/brendandburns.gcp-live-k8s-visualizer --www-prefix=/my-mountpoint/ --api-prefix=/api/
 
-SRC_DIR=$(dirname $0)/..
+SCRIPT_DIR=$(dirname $0)
+SRC_DIR=$(dirname $SCRIPT_DIR)
 
 die() {
     echo "$0: die - $*" >&2
@@ -43,6 +44,7 @@ while [ ! -z "$1" ];do
 done
 
 #kubectl proxy $OPTS  --www=$SRC_DIR --www-prefix=/ --api-prefix=/api/ --port $PORT
+pwd
 set -x
 kubectl proxy $OPTS  --www=$SRC_DIR --www-prefix=/static/ --port $PORT
 set +x
