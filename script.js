@@ -14,9 +14,22 @@
  limitations under the License.
  */
 
-var controllerColor='rgb(51,105,232)';
+/*
+    Pickup colours from CSS variables using:
+
+    var fooBar = bodyStyles.getPropertyValue('--foo-bar'); //get
+
+    document.body.style.setProperty('--foo-bar', newValue);//set
+*/
+
+var bodyStyles;
+var controllerColor;
+var serviceColor;
+var podColor;
+
+
 //var serviceColor='rgb(0,153,57)';
-var serviceColor='rgb(255,153,57)';
+//var serviceColor='rgb(255,153,57)';
 
 var colors = [
     'rgb(213,15,37)',
@@ -48,8 +61,15 @@ var insertByName = function (index, value) {
         groups[value.metadata.labels.run] = list;
     }
     list.push(value);
-    value.metadata.name=value.type + ": " + value.metadata.name;
-    //value.html='<b>' + value.type + "</b>: <br/><i>" + value.metadata.name + '</i>';
+
+    // Don't show type as just makes less name info available:
+    // console.log(value.metadata.labels);
+    value.metadata.sname=value.metadata.name;
+    if ((value.metadata.labels) && ('run' in value.metadata.labels)) {
+        //value.metadata.sname=value.type + ": " + value.metadata.labels.run;
+        value.metadata.sname=value.metadata.labels.run;
+    }
+    // value.metadata.name=value.type + ": " + value.metadata.name;
 };
 
 var groupByName = function () {
@@ -148,7 +168,8 @@ var connectUses = function () {
                                 endpoint: "Blank",
                                 anchors: ["Bottom", "Top"],
                                 connector: "Straight",
-                                paintStyle: {lineWidth: 5, strokeStyle: color},
+                                /*paintStyle: {lineWidth: 5, strokeStyle: color},*/
+                                paintStyle: {lineWidth: 5, strokeStyle: serviceColor},
                                 overlays: [
                                     ["Arrow", {width: 15, length: 30, location: 0.3}],
                                     ["Arrow", {width: 15, length: 30, location: 0.6}],
@@ -220,13 +241,18 @@ var renderGroups = function () {
                     '"/>');
                 controllersCount += 1;
             }
-            span = $('<span />');
-            //span = $('<span> text </span>');
-            //span = $('<div> text </div>');
-            span.text(truncate(value.metadata.name, 17));
-            //span.html(value.html);
-            //span.text('<b>' + value.metadata.name + '</b>');
-            //span.innerHTML='<b>' + value.metadata.name + '</b>';
+            //span = $('<span />');
+            span = $('<span style="line-height:1;text-align:top;"/>');
+            // span.text(truncate(value.metadata.name, 17));
+            // span.text(truncate(value.metadata.name, 23));
+
+            var names=value.metadata.sname;
+            if (value.metadata.name != value.metadata.sname) {
+                names = value.metadata.sname + "\n" + value.metadata.name;
+            }
+
+            span.html('<u>' + value.type + '</u>' + '<pre>' + names + '</pre>' );
+
             eltDiv.append(span)
             div.append(eltDiv);
             x += 180;
@@ -303,6 +329,15 @@ jsPlumb.bind("ready", function () {
 var reload = function () {
     $('#sheet').empty()
     jsPlumb.reset()
+
+    bodyStyles=window.getComputedStyle(document.body);
+    controllerColor=bodyStyles.getPropertyValue('--controller-bg-color');
+    serviceColor=bodyStyles.getPropertyValue('--service-bg-color');
+    podColor=bodyStyles.getPropertyValue('--pod-bg-color');
+
+    console.log("controllerColor=" + controllerColor);
+    console.log("serviceColor=" + serviceColor);
+    console.log("podColor=" + podColor);
 
     pods = [];
     services = [];
